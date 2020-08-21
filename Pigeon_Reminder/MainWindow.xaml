@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pigeon_Reminder"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="750" Width="500" ResizeMode="NoResize">
+    <Grid Margin="0,0,-6,0">
+        <Label x:Name="RepoLastUpateTime" Content="NAN" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="47,231,0,0" Height="35" Width="198"/>
+        <Button x:Name="Update" Content="Button" HorizontalAlignment="Left" Margin="309,264,0,0" VerticalAlignment="Top" Width="75" Click="Update_Click"/>
     </Grid>
 </Window>
