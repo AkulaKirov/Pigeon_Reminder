@@ -36,22 +36,30 @@ namespace Pigeon_Reminder
 
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            http.sAPI = http.GitUrlToAPI(RepoUrlBox.Text);
+            Repo item = RepoComboBox.SelectedItem as Repo;
+            if (item == null)
+            {
+                MessageBox.Show("您连选择Repo都没选择 您更新您马呢");
+                return;
+            }
+            http.sAPI = http.GitUrlToAPI(item.repoCloneUrl);
             http.Update();
-            Repo repo = http.SetNewRepo();
-            repos.Add(repo);
+            RepoComboBox.SelectedItem = http.SetNewRepo();
 
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            http.sAPI = http.GitUrlToAPI(RepoUrlBox.Text);
+            http.Update();
+            Repo repo = http.SetNewRepo();
+            repos.Add(repo);
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Repo item = RepoComboBox.SelectedItem as Repo;
-            RepoLastUpateTime.Content = item.lastUpdateTime;
+            RepoLastUpateTime.Content = item.lastUpdateTime.ToLocalTime();
             RepoUrlBox.Text = item.repoCloneUrl;
             TimeSpan diff = DateTime.Now - item.lastUpdateTime;
             PigeonTime.Content = "约 " + (int)diff.TotalDays + " 天";

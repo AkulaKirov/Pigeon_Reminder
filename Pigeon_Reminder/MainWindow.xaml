@@ -7,15 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="500" ResizeMode="NoResize">
     <Grid Margin="0,0,-6,0">
-        <Label x:Name="RepoLastUpateTime" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="108,224,0,0" Height="30" Width="297"/>
+        <Label x:Name="RepoLastUpateTime" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="108,224,0,0" Height="30" Width="340"/>
         <Button x:Name="Update" Content="获取" HorizontalAlignment="Left" Margin="108,648,0,0" VerticalAlignment="Top" Width="75" Click="Update_Click"/>
         <Button x:Name="AddButton" Content="添加" HorizontalAlignment="Left" Margin="308,648,0,0" VerticalAlignment="Top" Width="74" Click="AddButton_Click"/>
-        <ComboBox x:Name="RepoComboBox" HorizontalAlignment="Left" Margin="108,94,0,0" VerticalAlignment="Top" Width="297" SelectionChanged="RepoComboBox_SelectionChanged"/>
-        <TextBox x:Name="RepoUrlBox" HorizontalAlignment="Left" Height="24" Margin="108,163,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="297" VerticalScrollBarVisibility="Disabled" MaxLines="1" IsUndoEnabled="True"/>
+        <ComboBox x:Name="RepoComboBox" HorizontalAlignment="Left" Margin="108,94,0,0" VerticalAlignment="Top" Width="340" SelectionChanged="RepoComboBox_SelectionChanged"/>
+        <TextBox x:Name="RepoUrlBox" HorizontalAlignment="Left" Height="24" Margin="108,163,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="340" VerticalScrollBarVisibility="Disabled" MaxLines="1" IsUndoEnabled="True"/>
         <Label Content="Repo" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" Width="60" Height="25"/>
         <Label Content="Clone地址" HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top" Width="93" Height="25"/>
-        <Label Content="Last_Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="10,229,0,0"/>
+        <Label Content="Last_Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="10,224,0,0"/>
         <Label Content="已鸽时间" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="10,292,0,0"/>
-        <Label x:Name="PigeonTime" Content="" HorizontalAlignment="Left" Margin="108,292,0,0" VerticalAlignment="Top" Width="297"/>
+        <Label x:Name="PigeonTime" Content="" HorizontalAlignment="Left" Margin="108,292,0,0" VerticalAlignment="Top" Width="340"/>
     </Grid>
 </Window>
