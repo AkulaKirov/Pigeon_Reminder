@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,16 +25,36 @@ namespace Pigeon_Reminder
     {
         DispatcherTimer timer = new DispatcherTimer();
         HTTP http = new HTTP();
+        ArrayList repos = new ArrayList();
 
         public MainWindow()
         {
             InitializeComponent();
-
+            RepoComboBox.ItemsSource = repos;
+            RepoComboBox.DisplayMemberPath = "repoFullName";
         }
 
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            this.RepoLastUpateTime.Content = http.GetLastUpdateTime();
+            http.sAPI = http.GitUrlToAPI(RepoUrlBox.Text);
+            http.Update();
+            Repo repo = http.SetNewRepo();
+            repos.Add(repo);
+
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Repo item = RepoComboBox.SelectedItem as Repo;
+            RepoLastUpateTime.Content = item.lastUpdateTime;
+            RepoUrlBox.Text = item.repoCloneUrl;
+            TimeSpan diff = DateTime.Now - item.lastUpdateTime;
+            PigeonTime.Content = "约 " + (int)diff.TotalDays + " 天";
         }
     }
 }

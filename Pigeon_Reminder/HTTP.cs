@@ -5,61 +5,60 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows;
 
 namespace Pigeon_Reminder
 {
     class HTTP
     {
-        //string API = @"https://api.github.com/repos/{owner}/{repo}";
-        string API = @"https://api.github.com/repos/AkulaKirov/Pigeon_Reminder";
+        const string API = @"https://api.github.com/repos/{owner}/{repo}";
+        public string sAPI;
+        public string get = null;
+        JObject result;
 
-        public DateTime GetLastUpdateTime()
+        public void Update()
         {
-            string get;
-            Task<string> task = Get();
-            get = task.Result;
-            //System.IO.File.WriteAllText(@"get.json", get);
-            DateTime time = JsonToTime(get);
-            return time;
+            get = null;
+            try
+            {
+                get = HttpGet(sAPI);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return;
+            }
+            MessageBox.Show("获取成功");
+            System.IO.File.WriteAllText(@"get.json", get);
+            result = JObject.Parse(get);
         }
 
-        public async Task<string> Get()
+        
+        //鸽了 不想写异步了
+        public string HttpGet(string gitUrl)
         {
-            HttpWebRequest hwRequest = null;
-            HttpWebResponse hwResponse = null;
-
-            string get = string.Empty;
-            try
+            string get = null;
+            string url;
+            url = GitUrlToAPI(gitUrl);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "GET";
+            request.UserAgent = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0";
+            request.ContentType = "application/vnd.github.v3+json";
+            using (WebResponse wr = request.GetResponseAsync().Result)
             {
-                hwRequest = (System.Net.HttpWebRequest)WebRequest.Create(API);
-                //hwRequest.Timeout = 30000;
-                hwRequest.Method = "GET";
-                hwRequest.ContentType = "application/vnd.github.v3+json";
-                hwRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0";
-            }
-            catch (System.Exception err)
-            {
-                return err.ToString();
-            }
-            try
-            {
-                hwResponse = (HttpWebResponse)hwRequest.GetResponse();
-                StreamReader srReader = new StreamReader(hwResponse.GetResponseStream(), Encoding.UTF8);
-                get = srReader.ReadToEnd();
-                srReader.Close();
-                hwResponse.Close();
-            }
-            catch (System.Exception err)
-            {
-                return err.ToString();
+                using (StreamReader reader = new StreamReader(wr.GetResponseStream(), Encoding.UTF8))
+                {
+                    get = reader.ReadToEnd();
+                }
             }
             return get;
         }
 
-        public DateTime JsonToTime(string json)
+        public DateTime GetTime(string json)
         {
             DateTime time = DateTime.Now;
 
@@ -68,6 +67,7 @@ namespace Pigeon_Reminder
                 var result = JObject.Parse(json);
                 var value = result.GetValue("updated_at");
                 time = DateTime.Parse(value.ToString(), System.Globalization.CultureInfo.CurrentCulture);
+                time = time.AddHours(8f);
             }
             catch (Exception e)
             {
@@ -75,6 +75,35 @@ namespace Pigeon_Reminder
             }
             
             return time;
+        }
+
+        public string GitUrlToAPI(string gitUrl)
+        { 
+            string[] s = gitUrl.Split('/');
+            string owner = s[s.Length - 2];
+            string repo = s[s.Length - 1].Replace(".git", "");
+            return ReplaceAPI(owner, repo);
+        }
+
+        public string ReplaceAPI(string owner, string repo)
+        {
+            sAPI = API.Replace("{owner}", owner);
+            sAPI = sAPI.Replace("{repo}", repo);
+            return sAPI;
+        }
+
+        public Repo SetNewRepo()
+        {
+            Repo repo = new Repo();
+
+            JObject owner = (JObject)result.GetValue("owner");
+            repo.owner = owner.GetValue("login").ToString();
+            repo.repoName = result.GetValue("name").ToString();
+            repo.repoCloneUrl = result.GetValue("clone_url").ToString();
+            repo.createTime = DateTime.Parse(result.GetValue("created_at").ToString(), System.Globalization.CultureInfo.CurrentCulture);
+            repo.lastUpdateTime = DateTime.Parse(result.GetValue("updated_at").ToString(), System.Globalization.CultureInfo.CurrentCulture);
+            
+            return repo;
         }
 
     }

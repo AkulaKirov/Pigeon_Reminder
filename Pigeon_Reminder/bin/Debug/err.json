@@ -1,4 +1,7 @@
-System.FormatException: 该字符串未被识别为有效的 DateTime。
-   在 System.DateTimeParse.ParseExact(String s, String format, DateTimeFormatInfo dtfi, DateTimeStyles style)
-   在 System.DateTime.ParseExact(String s, String format, IFormatProvider provider)
-   在 Pigeon_Reminder.HTTP.JsonToTime(String json) 位置 C:\Users\photo\source\repos\Pigeon_Reminder\Pigeon_Reminder\HTTP.cs:行号 70
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+   在 Newtonsoft.Json.JsonTextReader.ParseValue()
+   在 Newtonsoft.Json.JsonTextReader.Read()
+   在 Newtonsoft.Json.Linq.JObject.Load(JsonReader reader, JsonLoadSettings settings)
+   在 Newtonsoft.Json.Linq.JObject.Parse(String json, JsonLoadSettings settings)
+   在 Newtonsoft.Json.Linq.JObject.Parse(String json)
+   在 Pigeon_Reminder.HTTP.GetTimeFromJson(String json) 位置 C:\Users\photo\source\repos\Pigeon_Reminder\Pigeon_Reminder\HTTP.cs:行号 54
