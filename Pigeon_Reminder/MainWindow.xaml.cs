@@ -25,16 +25,18 @@ namespace Pigeon_Reminder
     /// </summary>
     public partial class MainWindow : Window
     {
-        RepoManager manager = new RepoManager();
+        RepoManager rManager = new RepoManager();
+        WidgetManager wManager = new WidgetManager();
         Widget widget = new Widget();
 
         public MainWindow()
         {
             InitializeComponent();
-            RepoComboBox.ItemsSource = manager.repos;
+            RepoComboBox.ItemsSource = rManager.repos;
             RepoComboBox.DisplayMemberPath = "repoFullName";
+            WidgetComboBox.ItemsSource = wManager.widgetTemplates;
+            WidgetComboBox.DisplayMemberPath = "templateName";
 
-            widget.Show();
         }
 
         private void Update_Click(object sender, RoutedEventArgs e)
@@ -45,15 +47,21 @@ namespace Pigeon_Reminder
                 System.Windows.MessageBox.Show("您连Repo都没选择 您更新您马呢");
                 return;
             }
-            RepoComboBox.SelectedItem = manager.CreateNewRepo(item.repoCloneUrl);
+            rManager.UpdateRepo((Repo)item);
 
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            Repo repo = manager.CreateNewRepo(RepoUrlBox.Text);
-            manager.repos.Add(repo);
+            if (RepoUrlBox.Text.Trim() == "")
+            {
+                System.Windows.MessageBox.Show("您连克隆地址都没输入 您添加您马呢");
+                return;
+            }
+            Repo repo = rManager.CreateNewRepo(RepoUrlBox.Text);
+            rManager.AddRepo(repo);
             RepoComboBox.SelectedItem = repo;
+            RepoComboBox.ItemsSource = rManager.repos;
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -65,7 +73,21 @@ namespace Pigeon_Reminder
             PigeonTime.Content = "约 " + (int)diff.TotalDays + " 天";
         }
 
-        private void WidgetSelect_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            wManager.CloseAllWidgets();
+            rManager.DeleteSameRepo();
+            rManager.SaveRepos();
+            GC.Collect();
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void IWannaPigeon_Click(object sender, RoutedEventArgs e)
+        {
+            wManager.AddWidget((WidgetTemplate)WidgetComboBox.SelectedItem);
+        }
+
+        private void WidgetAdd_Click(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
             dialog.IsFolderPicker = true;
@@ -77,18 +99,23 @@ namespace Pigeon_Reminder
             BitmapImage bitmap = new BitmapImage(new Uri(WidgetFolder.Text + "\\idle.png", UriKind.Absolute));
             WidgetPreview.Source = bitmap;
             widget.SetImage(bitmap);
+            var item = wManager.AddWidgetTemplateFromFolder(WidgetFolder.Text);
+            wManager.wTemplate = item;
+            WidgetComboBox.SelectedItem = item;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void WidgetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            widget.Close();
+            var item = (WidgetTemplate)WidgetComboBox.SelectedItem;
+            WidgetFolder.Text = item.path;
+            WidgetPreview.Source = ((Img)item.imgs[0]).img;
+            WidgetImgListBox.ItemsSource = item.imgs;
+            WidgetImgListBox.DisplayMemberPath = "name";
         }
 
-        private void IWannaPigeon_Click(object sender, RoutedEventArgs e)
+        private void WidgetImgListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Widget widget = new Widget();
-            widget.SetImage((BitmapImage)WidgetPreview.Source);
-            widget.Show();
+            WidgetPreview.Source = ((Img)WidgetImgListBox.SelectedItem).img;
         }
     }
 }

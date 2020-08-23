@@ -68,11 +68,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HTTP.cs" />
+    <Compile Include="Img.cs" />
     <Compile Include="Repo.cs" />
     <Compile Include="RepoManager.cs" />
     <Compile Include="Widget.xaml.cs">
       <DependentUpon>Widget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WidgetManager.cs" />
+    <Compile Include="WidgetTemplate.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,9 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="avatar.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
