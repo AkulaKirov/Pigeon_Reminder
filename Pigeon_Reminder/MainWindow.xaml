@@ -5,17 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pigeon_Reminder"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="500" ResizeMode="NoResize">
+        Title="Pigeon_Reminder" Height="750" Width="500" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid Margin="0,0,-6,0">
         <Label x:Name="RepoLastUpateTime" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="108,224,0,0" Height="30" Width="340"/>
-        <Button x:Name="Update" Content="获取" HorizontalAlignment="Left" Margin="108,648,0,0" VerticalAlignment="Top" Width="75" Click="Update_Click"/>
-        <Button x:Name="AddButton" Content="添加" HorizontalAlignment="Left" Margin="308,648,0,0" VerticalAlignment="Top" Width="74" Click="AddButton_Click"/>
+        <Button x:Name="Update" Content="更新" HorizontalAlignment="Left" Margin="80,441,0,0" VerticalAlignment="Top" Width="74" Click="Update_Click"/>
+        <Button x:Name="AddButton" Content="添加" HorizontalAlignment="Left" Margin="330,441,0,0" VerticalAlignment="Top" Width="74" Click="AddButton_Click"/>
         <ComboBox x:Name="RepoComboBox" HorizontalAlignment="Left" Margin="108,94,0,0" VerticalAlignment="Top" Width="340" SelectionChanged="RepoComboBox_SelectionChanged"/>
-        <TextBox x:Name="RepoUrlBox" HorizontalAlignment="Left" Height="24" Margin="108,163,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="340" VerticalScrollBarVisibility="Disabled" MaxLines="1" IsUndoEnabled="True"/>
+        <TextBox x:Name="RepoUrlBox" HorizontalAlignment="Left" Height="24" Margin="108,163,0,0" VerticalAlignment="Top" Width="340" VerticalScrollBarVisibility="Disabled" MaxLines="1" IsUndoEnabled="True"/>
         <Label Content="Repo" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" Width="60" Height="25"/>
         <Label Content="Clone地址" HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top" Width="93" Height="25"/>
         <Label Content="Last_Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="10,224,0,0"/>
         <Label Content="已鸽时间" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="10,292,0,0"/>
         <Label x:Name="PigeonTime" Content="" HorizontalAlignment="Left" Margin="108,292,0,0" VerticalAlignment="Top" Width="340"/>
+        <Grid HorizontalAlignment="Left" Height="237" Margin="0,484,0,0" VerticalAlignment="Top" Width="490" Background="#7F7A7A7A">
+            <Image x:Name="WidgetPreview" HorizontalAlignment="Left" Height="100" Margin="10,40,0,0" VerticalAlignment="Top" Width="100"/>
+            <Label Content="Widget预览" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="10,10,0,0"/>
+            <TextBox x:Name="WidgetFolder" HorizontalAlignment="Left" Height="23" Margin="278,12,0,0" VerticalAlignment="Top" Width="120" MaxLines="1" IsReadOnly="True" TextOptions.TextFormattingMode="Display"/>
+            <Label Content="Widget位置" HorizontalAlignment="Left" VerticalAlignment="Top" Width="93" Height="25" Margin="185,12,0,0"/>
+            <Button x:Name="WidgetSelect" Content="选择" HorizontalAlignment="Left" Margin="403,13,0,0" VerticalAlignment="Top" Width="75" Click="WidgetSelect_Click"/>
+        </Grid>
+        <Button x:Name="IWannaPigeon" Content="我要鸽" HorizontalAlignment="Left" Margin="204,441,0,0" VerticalAlignment="Top" Width="75" Click="IWannaPigeon_Click"/>
     </Grid>
 </Window>

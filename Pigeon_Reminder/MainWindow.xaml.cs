@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,15 +25,16 @@ namespace Pigeon_Reminder
     /// </summary>
     public partial class MainWindow : Window
     {
-        DispatcherTimer timer = new DispatcherTimer();
-        HTTP http = new HTTP();
-        ArrayList repos = new ArrayList();
+        RepoManager manager = new RepoManager();
+        Widget widget = new Widget();
 
         public MainWindow()
         {
             InitializeComponent();
-            RepoComboBox.ItemsSource = repos;
+            RepoComboBox.ItemsSource = manager.repos;
             RepoComboBox.DisplayMemberPath = "repoFullName";
+
+            widget.Show();
         }
 
         private void Update_Click(object sender, RoutedEventArgs e)
@@ -39,21 +42,18 @@ namespace Pigeon_Reminder
             Repo item = RepoComboBox.SelectedItem as Repo;
             if (item == null)
             {
-                MessageBox.Show("您连选择Repo都没选择 您更新您马呢");
+                System.Windows.MessageBox.Show("您连Repo都没选择 您更新您马呢");
                 return;
             }
-            http.sAPI = http.GitUrlToAPI(item.repoCloneUrl);
-            http.Update();
-            RepoComboBox.SelectedItem = http.SetNewRepo();
+            RepoComboBox.SelectedItem = manager.CreateNewRepo(item.repoCloneUrl);
 
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            http.sAPI = http.GitUrlToAPI(RepoUrlBox.Text);
-            http.Update();
-            Repo repo = http.SetNewRepo();
-            repos.Add(repo);
+            Repo repo = manager.CreateNewRepo(RepoUrlBox.Text);
+            manager.repos.Add(repo);
+            RepoComboBox.SelectedItem = repo;
         }
 
         private void RepoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -63,6 +63,32 @@ namespace Pigeon_Reminder
             RepoUrlBox.Text = item.repoCloneUrl;
             TimeSpan diff = DateTime.Now - item.lastUpdateTime;
             PigeonTime.Content = "约 " + (int)diff.TotalDays + " 天";
+        }
+
+        private void WidgetSelect_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                string strFileName = dialog.FileName;
+                WidgetFolder.Text = strFileName;
+            }
+            BitmapImage bitmap = new BitmapImage(new Uri(WidgetFolder.Text + "\\idle.png", UriKind.Absolute));
+            WidgetPreview.Source = bitmap;
+            widget.SetImage(bitmap);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            widget.Close();
+        }
+
+        private void IWannaPigeon_Click(object sender, RoutedEventArgs e)
+        {
+            Widget widget = new Widget();
+            widget.SetImage((BitmapImage)WidgetPreview.Source);
+            widget.Show();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Pigeon_Reminder
         public string get = null;
         JObject result;
 
-        public void Update()
+        public Repo GetRepoInfo()
         {
             get = null;
             try
@@ -30,11 +30,20 @@ namespace Pigeon_Reminder
             catch(Exception e)
             {
                 MessageBox.Show(e.ToString());
-                return;
+                return null;
             }
-            MessageBox.Show("获取成功");
             System.IO.File.WriteAllText(@"get.json", get);
             result = JObject.Parse(get);
+            Repo repo = SetNewRepo();
+            if (repo == null)
+            {
+                MessageBox.Show("获取失败");
+            }
+            else
+            {
+                MessageBox.Show("获取成功");
+            }
+            return repo;
         }
 
         
@@ -78,11 +87,20 @@ namespace Pigeon_Reminder
         }
 
         public string GitUrlToAPI(string gitUrl)
-        { 
-            string[] s = gitUrl.Split('/');
-            string owner = s[s.Length - 2];
-            string repo = s[s.Length - 1].Replace(".git", "");
-            return ReplaceAPI(owner, repo);
+        {
+            try
+            {
+                string[] s = gitUrl.Split('/');
+                string owner = s[s.Length - 2];
+                string repo = s[s.Length - 1].Replace(".git", "");
+                return ReplaceAPI(owner, repo);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return null;
+            }
+
         }
 
         public string ReplaceAPI(string owner, string repo)
